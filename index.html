@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustGuard Vietnam | Định Chế Bảo Lãnh Tài Chính</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Đã được cấu hình đầy đủ weights để hỗ trợ Tiếng Việt hoàn hảo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            950: '#021209', /* Đen ánh xanh siêu đậm */
+                            900: '#062615', /* Xanh lục bảo đậm nền */
+                            800: '#0b3d22', /* Xanh viền */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* 1. Nền tảng màu sắc */
+        body {
+            background-color: #021209;
+            background-image: radial-gradient(circle at 50% 0%, #062615 0%, #021209 70%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Cải thiện hiển thị font chữ */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 2. CHẤT LIỆU VÀNG THẬT (REAL GOLD EFFECT) */
+        .text-real-gold {
+            background: linear-gradient(to right, #9c7317 0%, #d4af37 25%, #ffeba1 50%, #d4af37 75%, #9c7317 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            background-size: 200% auto;
+            animation: goldShineText 6s linear infinite;
+        }
+
+        .bg-real-gold {
+            background: linear-gradient(135deg, #9c7317 0%, #d4af37 25%, #ffeba1 50%, #d4af37 75%, #9c7317 100%);
+            color: #021209 !important;
+            border: 1px solid #ffeba1;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4), inset 0 1px 1px rgba(255,255,255,0.8);
+            background-size: 200% auto;
+            transition: all 0.3s ease;
+        }
+        
+        .bg-real-gold:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6), inset 0 1px 2px rgba(255,255,255,1);
+        }
+
+        .border-real-gold {
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #9c7317, #ffeba1, #d4af37) 1;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        @keyframes goldShineText {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* 3. HIỆU ỨNG 3D FLIP CHO CARD */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 420px;
+            perspective: 1500px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(6, 38, 21, 0.7);
+            backdrop-filter: blur(12px);
+            /* Sửa lỗi hiển thị chữ bên trong card */
+            transform: translateZ(0); 
+        }
+
+        .flip-card-back {
+            background: rgba(2, 18, 9, 0.95);
+            transform: rotateY(180deg);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Ambient Glow */
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Hiệu ứng đồng xu VÀNG THẬT (3D Real Gold Coin) */
+        .gold-coin-particle {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            /* Gradient mô phỏng ánh sáng trên bề mặt kim loại tròn */
+            background: radial-gradient(ellipse at 30% 30%, #fffeba 0%, #d4af37 30%, #9c7317 70%, #523a07 100%);
+            border-radius: 50%;
+            /* Đổ bóng và tạo viền nổi 3D chân thực */
+            box-shadow: 
+                inset 0 0 3px rgba(255, 255, 255, 0.9),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+                inset -2px -2px 6px rgba(0, 0, 0, 0.7),
+                0 6px 12px rgba(0, 0, 0, 0.6),
+                0 0 15px rgba(212, 175, 55, 0.5);
+            pointer-events: none;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: coinExplode 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            transform-style: preserve-3d;
+        }
+
+        /* Vòng tròn dập nổi bên trong bề mặt đồng xu */
+        .gold-coin-particle::before {
+            content: "";
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes coinExplode {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2) rotateY(0deg) rotateX(0deg);
+                opacity: 1;
+            }
+            30% {
+                opacity: 1;
+                /* Nảy lên, lật 3D (xoay theo trục Y và X) */
+                transform: translate(calc(-50% + var(--dx) * 0.4), calc(-50% + var(--dy) * 0.4 - 80px)) scale(1.2) rotateY(180deg) rotateX(70deg);
+            }
+            100% {
+                /* Rơi xuống, xoay tít và thu nhỏ dần */
+                transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 50px)) scale(0.6) rotateY(900deg) rotateX(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans selection:bg-[#d4af37] selection:text-[#021209]">
+
+    <!-- Ánh sáng nền ảo -->
+    <div class="ambient-glow bg-[#d4af37] w-[500px] h-[500px] top-[-150px] left-[-150px] opacity-10"></div>
+    <div class="ambient-glow bg-[#062615] w-[700px] h-[700px] top-[40%] right-[-200px] opacity-30"></div>
+
+    <div class="relative z-10">
+        <!-- Header -->
+        <header class="fixed w-full top-0 z-50 bg-[#021209]/80 backdrop-blur-md border-b border-[#d4af37]/20 transition-all duration-300" id="navbar">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-24">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="#" class="flex items-center gap-3 group">
+                            <div class="w-12 h-12 rounded bg-real-gold flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.5)]">
+                                <i class="fa-solid fa-shield-cat text-2xl text-[#021209]"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-serif text-3xl font-bold text-real-gold tracking-widest leading-none">TrustGuard</span>
+                                <span class="text-[10px] tracking-[0.2em] text-gray-400 uppercase mt-1">Guarantee Institution</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Desktop Menu -->
+                    <nav class="hidden lg:flex space-x-10 items-center">
+                        <a href="#about" class="text-gray-300 hover:text-[#ffeba1] transition-colors text-sm uppercase tracking-widest font-medium">Về Quỹ</a>
+                        <a href="#model" class="text-gray-300 hover:text-[#ffeba1] transition-colors text-sm uppercase tracking-widest font-medium">Cơ Chế 3D</a>
+                        <a href="#benefits" class="text-gray-300 hover:text-[#ffeba1] transition-colors text-sm uppercase tracking-widest font-medium">Đặc Quyền</a>
+                        <a href="#cert" class="text-gray-300 hover:text-[#ffeba1] transition-colors text-sm uppercase tracking-widest font-medium">Pháp Lý</a>
+                        <a href="#contact" class="bg-real-gold px-8 py-3 rounded text-sm font-bold uppercase tracking-wider">Đăng Ký Định Danh</a>
+                    </nav>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="lg:hidden flex items-center">
+                        <button id="mobile-menu-btn" class="text-[#d4af37] hover:text-white p-2">
+                            <i class="fa-solid fa-bars text-3xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden bg-[#062615] border-b border-[#d4af37]/20">
+                <div class="px-4 py-4 space-y-2">
+                    <a href="#model" class="block px-3 py-3 text-[#ffeba1] hover:bg-[#021209] rounded">Cơ Chế 3D</a>
+                    <a href="#contact" class="block mt-4 text-center bg-real-gold px-4 py-3 rounded font-bold text-[#021209]">Đăng Ký Định Danh</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="pt-24">
+            <!-- Hero Section -->
+            <section id="hero-section" class="relative min-h-[95vh] flex items-center pt-10 pb-20 overflow-hidden cursor-crosshair">
+                
+                <!-- HIỆU ỨNG MỚI: QUỸ ĐẠO LÕI VÀNG (GOLDEN CORE ORBIT) -->
+                <div class="absolute inset-0 flex items-center justify-center z-0 pointer-events-none overflow-hidden">
+                    <!-- Lưới sọc chìm (Grid) sang trọng -->
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(212,175,55,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.04)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_20%,transparent_100%)]"></div>
+                    
+                    <!-- Ánh sáng lõi tâm điểm -->
+                    <div class="absolute w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-[radial-gradient(circle,_rgba(212,175,55,0.12)_0%,_transparent_60%)] rounded-full blur-3xl animate-[pulse_5s_ease-in-out_infinite]"></div>
+                    
+                    <!-- Vòng quỹ đạo 1 (Đại diện cho Khách Hàng) -->
+                    <div class="absolute w-[450px] h-[450px] md:w-[800px] md:h-[800px] border border-[#d4af37]/15 rounded-full animate-[spin_45s_linear_infinite]" style="transform: rotateX(65deg) rotateY(15deg); transform-style: preserve-3d;">
+                         <div class="absolute top-0 left-1/2 w-4 h-4 bg-[#ffeba1] rounded-full shadow-[0_0_20px_#ffeba1] -translate-x-1/2 -translate-y-1/2"></div>
+                    </div>
+                    
+                    <!-- Vòng quỹ đạo 2 (Đại diện cho Sàn Giao Dịch) -->
+                    <div class="absolute w-[350px] h-[350px] md:w-[600px] md:h-[600px] border border-[#d4af37]/25 rounded-full animate-[spin_30s_linear_infinite_reverse]" style="transform: rotateX(75deg) rotateY(-25deg); transform-style: preserve-3d;">
+                        <div class="absolute bottom-0 left-1/2 w-5 h-5 bg-[#d4af37] rounded-full shadow-[0_0_25px_#d4af37] -translate-x-1/2 translate-y-1/2"></div>
+                    </div>
+
+                    <!-- Vòng bảo vệ ngoài cùng (Đại diện TrustGuard) -->
+                    <div class="absolute w-[550px] h-[550px] md:w-[1000px] md:h-[1000px] border-t-2 border-r border-[#d4af37]/20 border-dashed rounded-full animate-[spin_60s_linear_infinite]" style="transform: rotateX(55deg) rotateY(5deg);"></div>
+                </div>
+
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center">
+                    
+                    <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[#d4af37]/40 bg-[#062615]/80 mb-8 shadow-[0_0_20px_rgba(212,175,55,0.2)] backdrop-blur-sm">
+                        <i class="fa-solid fa-crown text-[#ffeba1] text-sm"></i>
+                        <span class="text-[11px] md:text-xs text-[#ffeba1] tracking-[0.25em] uppercase font-bold">Tài Sản Được Bảo Chứng Bằng Vàng & Pháp Lý</span>
+                    </div>
+                    
+                    <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8">
+                        Chuẩn Mực Mới Cho <br>
+                        <span class="text-real-gold block mt-3 pb-2">Dòng Vốn Tinh Hoa</span>
+                    </h1>
+                    
+                    <p class="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto font-light leading-relaxed tracking-wide">
+                        Định chế tài chính tiên phong tại Việt Nam cung cấp giải pháp bảo lãnh tiền gửi cho khách hàng giao dịch FX CFD với quy mô vốn <strong>trên $1,000,000</strong>. Loại bỏ triệt để rủi ro thanh khoản.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                        <a href="#contact" class="bg-real-gold px-10 py-5 rounded text-center font-bold text-lg uppercase tracking-wider">
+                            Yêu Cầu Thẩm Định 
+                        </a>
+                        <a href="#model" class="px-10 py-5 rounded text-center font-bold text-lg text-[#ffeba1] border-2 border-[#d4af37]/50 hover:bg-[#d4af37]/10 transition-all uppercase tracking-wider backdrop-blur-md">
+                            Khám Phá Cơ Chế Quỹ
+                        </a>
+                    </div>
+                    
+                    <p class="mt-8 text-sm text-[#d4af37]/60 font-light italic animate-pulse">
+                        <i class="fa-solid fa-sparkles mr-2"></i>Rê chuột quanh khu vực này để cảm nhận sự thịnh vượng
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3D Model Section -->
+            <section id="model" class="py-32 relative z-10 bg-[#041a0e] border-t border-[#d4af37]/20 overflow-hidden">
+                <!-- Nền ánh sáng và hoa văn phụ -->
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_#0b3d22_0%,_transparent_70%)] opacity-40 pointer-events-none"></div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-px h-32 bg-gradient-to-b from-[#d4af37]/80 to-transparent"></div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="text-center mb-24">
+                        <div class="inline-flex items-center gap-2 mb-4">
+                            <span class="w-8 h-px bg-[#d4af37]/50"></span>
+                            <span class="text-[#d4af37] text-xs uppercase tracking-[0.3em] font-bold">Vận Hành Dòng Vốn</span>
+                            <span class="w-8 h-px bg-[#d4af37]/50"></span>
+                        </div>
+                        <h2 class="font-serif text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-xl">Mô Hình Bảo Lãnh <span class="text-real-gold italic">3 Chiều</span></h2>
+                        <p class="text-gray-400 text-sm md:text-base font-light tracking-wide max-w-2xl mx-auto leading-relaxed">
+                            Cơ chế trích lập dự phòng độc lập, minh bạch tuyệt đối. <br class="hidden md:block"> Rê chuột (<i class="fa-solid fa-arrow-pointer mx-1 text-[#ffeba1]"></i>) vào các thẻ để xem chi tiết luồng tiền.
+                        </p>
+                    </div>
+
+                    <div class="relative w-full">
+                        <!-- Đường line kết nối luồng tiền (Chỉ hiện trên Desktop) -->
+                        <div class="hidden lg:block absolute top-1/2 left-[15%] right-[15%] h-0.5 -translate-y-1/2 z-0">
+                            <!-- Line nền -->
+                            <div class="absolute inset-0 bg-[#d4af37]/20"></div>
+                            <!-- Line chạy tia sáng -->
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#ffeba1] to-transparent w-1/3 animate-[pulse_2s_ease-in-out_infinite] blur-[2px]"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14 relative perspective-1000 z-10">
+                            
+                            <!-- Card 1: Khách hàng -->
+                            <div class="flip-card group h-[480px]">
+                                <div class="flip-card-inner rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-[#d4af37]/30 bg-[#021209]">
+                                    <!-- Mặt trước -->
+                                    <div class="flip-card-front bg-gradient-to-b from-[#062615] to-[#021209]">
+                                        <div class="w-24 h-24 rounded bg-[#021209] border border-[#d4af37]/50 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(212,175,55,0.2)] rotate-45 group-hover:rotate-0 transition-transform duration-700">
+                                            <i class="fa-solid fa-user-tie text-4xl text-[#ffeba1] -rotate-45 group-hover:rotate-0 transition-transform duration-700"></i>
+                                        </div>
+                                        <h3 class="font-serif text-4xl text-white mb-3 font-bold tracking-wide">Nhà Đầu Tư</h3>
+                                        <div class="w-12 h-px bg-[#d4af37] mx-auto mb-4"></div>
+                                        <p class="text-gray-400 font-medium text-xs uppercase tracking-[0.2em] mb-2">Khối Tài Sản Ký Quỹ</p>
+                                        <p class="text-real-gold font-bold text-xl tracking-widest">> $1,000,000</p>
+                                    </div>
+                                    <!-- Mặt sau -->
+                                    <div class="flip-card-back bg-[#010a05] border border-[#d4af37]/50 relative overflow-hidden">
+                                        <div class="absolute -top-10 -right-10 text-9xl text-[#d4af37]/5"><i class="fa-solid fa-user-tie"></i></div>
+                                        
+                                        <p class="text-[#d4af37] text-xs uppercase tracking-[0.2em] font-bold mb-2">Phí Duy Trì Bảo Lãnh</p>
+                                        <div class="font-serif text-6xl text-white font-bold mb-6 flex items-baseline justify-center gap-1">
+                                            2<span class="text-3xl text-real-gold">%</span><span class="text-sm font-sans text-gray-500 font-light tracking-normal">/tháng</span>
+                                        </div>
+                                        
+                                        <div class="w-full text-left space-y-4 pt-6 border-t border-[#d4af37]/20">
+                                            <div class="flex gap-3">
+                                                <i class="fa-solid fa-check text-[#d4af37] mt-1 text-sm"></i>
+                                                <div>
+                                                    <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-1">Bảo vệ 100% Gốc</h4>
+                                                    <p class="text-gray-400 text-xs leading-relaxed font-light">An toàn vốn tuyệt đối trước rủi ro thanh khoản của nền tảng.</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-3">
+                                                <i class="fa-solid fa-file-contract text-[#d4af37] mt-1 text-sm"></i>
+                                                <div>
+                                                    <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-1">Chứng Chỉ Pháp Lý</h4>
+                                                    <p class="text-gray-400 text-xs leading-relaxed font-light">Cấp hợp đồng bảo lãnh 3 bên có giá trị công chứng.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Quỹ TrustGuard (Trung tâm) -->
+                            <div class="flip-card group h-[480px] lg:-translate-y-8">
+                                <div class="flip-card-inner rounded-2xl shadow-[0_20px_50px_rgba(212,175,55,0.15)]">
+                                    <!-- Mặt trước -->
+                                    <div class="flip-card-front bg-real-gold border border-[#ffeba1]">
+                                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/brushed-alum.png')] opacity-30 mix-blend-overlay rounded-2xl pointer-events-none"></div>
+                                        <div class="w-28 h-28 rounded-full bg-[#021209] flex items-center justify-center mb-8 shadow-inner border-4 border-[#0b3d22]">
+                                            <i class="fa-solid fa-shield-halved text-5xl text-[#d4af37]"></i>
+                                        </div>
+                                        <h3 class="font-serif text-4xl text-[#021209] mb-3 font-bold tracking-wide">TrustGuard</h3>
+                                        <div class="w-16 h-1 bg-[#021209] mx-auto mb-4 opacity-50"></div>
+                                        <p class="text-[#0b3d22] font-bold text-xs uppercase tracking-[0.25em]">Trung Tâm Dự Phòng Rủi Ro</p>
+                                        <p class="text-[#021209] text-sm mt-4 font-medium px-4">Định chế nắm giữ và quản lý toàn bộ nguồn vốn đối ứng.</p>
+                                    </div>
+                                    <!-- Mặt sau -->
+                                    <div class="flip-card-back bg-[#021209] border-2 border-transparent" style="border-image: linear-gradient(135deg, #d4af37, #ffeba1, #d4af37) 1;">
+                                        <p class="text-[#d4af37] text-xs uppercase tracking-[0.2em] font-bold mb-2">Tổng Quỹ Trích Lập</p>
+                                        <div class="font-serif text-7xl text-real-gold font-bold mb-2 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                                            3<span class="text-4xl">%</span>
+                                        </div>
+                                        <p class="text-gray-400 text-xs font-light tracking-widest mb-6 border-b border-[#d4af37]/30 pb-4">Từ Khách Hàng (2%) + Sàn (1%)</p>
+                                        
+                                        <div class="bg-[#062615] w-full p-4 rounded border border-[#d4af37]/20 text-left">
+                                            <ul class="space-y-3">
+                                                <li class="flex items-center justify-between">
+                                                    <span class="text-gray-300 text-xs uppercase tracking-wider font-semibold">Tài khoản phong tỏa</span>
+                                                    <i class="fa-solid fa-lock text-[#d4af37]"></i>
+                                                </li>
+                                                <li class="flex items-center justify-between border-t border-[#d4af37]/10 pt-3">
+                                                    <span class="text-gray-300 text-xs uppercase tracking-wider font-semibold">Kiểm toán độc lập Big4</span>
+                                                    <i class="fa-solid fa-magnifying-glass-dollar text-[#d4af37]"></i>
+                                                </li>
+                                                <li class="flex items-center justify-between border-t border-[#d4af37]/10 pt-3">
+                                                    <span class="text-gray-300 text-xs uppercase tracking-wider font-semibold">Bồi thường 100% gốc</span>
+                                                    <i class="fa-solid fa-hand-holding-dollar text-[#d4af37]"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Sàn giao dịch -->
+                            <div class="flip-card group h-[480px]">
+                                <div class="flip-card-inner rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-[#d4af37]/30 bg-[#021209]">
+                                    <!-- Mặt trước -->
+                                    <div class="flip-card-front bg-gradient-to-b from-[#062615] to-[#021209]">
+                                        <div class="w-24 h-24 rounded bg-[#021209] border border-[#d4af37]/50 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(212,175,55,0.2)] rotate-45 group-hover:rotate-0 transition-transform duration-700">
+                                            <i class="fa-solid fa-chart-candlestick text-4xl text-[#ffeba1] -rotate-45 group-hover:rotate-0 transition-transform duration-700"></i>
+                                        </div>
+                                        <h3 class="font-serif text-4xl text-white mb-3 font-bold tracking-wide">Sàn Giao Dịch</h3>
+                                        <div class="w-12 h-px bg-[#d4af37] mx-auto mb-4"></div>
+                                        <p class="text-gray-400 font-medium text-xs uppercase tracking-[0.2em] mb-2">Đơn Vị Môi Giới</p>
+                                        <p class="text-real-gold font-bold text-xl tracking-widest">Đối Tác FX CFD</p>
+                                    </div>
+                                    <!-- Mặt sau -->
+                                    <div class="flip-card-back bg-[#010a05] border border-[#d4af37]/50 relative overflow-hidden">
+                                        <div class="absolute -top-10 -right-10 text-9xl text-[#d4af37]/5"><i class="fa-solid fa-chart-line"></i></div>
+                                        
+                                        <p class="text-[#d4af37] text-xs uppercase tracking-[0.2em] font-bold mb-2">Phí Tham Gia Mạng Lưới</p>
+                                        <div class="font-serif text-6xl text-white font-bold mb-6 flex items-baseline justify-center gap-1">
+                                            1<span class="text-3xl text-real-gold">%</span><span class="text-sm font-sans text-gray-500 font-light tracking-normal">/tháng</span>
+                                        </div>
+                                        
+                                        <div class="w-full text-left space-y-4 pt-6 border-t border-[#d4af37]/20">
+                                            <div class="flex gap-3">
+                                                <i class="fa-solid fa-vault text-[#d4af37] mt-1 text-sm"></i>
+                                                <div>
+                                                    <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-1">Cọc Cố Định</h4>
+                                                    <p class="text-gray-400 text-xs leading-relaxed font-light">Ký quỹ ban đầu vào quỹ TrustGuard để thiết lập tín nhiệm.</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex gap-3">
+                                                <i class="fa-solid fa-gem text-[#d4af37] mt-1 text-sm"></i>
+                                                <div>
+                                                    <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-1">Lợi Thế Cạnh Tranh</h4>
+                                                    <p class="text-gray-400 text-xs leading-relaxed font-light">Công cụ Marketing hạng nặng để thu hút tệp khách hàng cá mập.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Legal Section -->
+            <section id="cert" class="py-24 relative overflow-hidden bg-[#062615]/40 border-y border-[#d4af37]/20">
+                <div class="max-w-5xl mx-auto px-4 text-center">
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold mb-16 text-white"><span class="text-real-gold">Tôn Chỉ</span> Hoạt Động & Pháp Lý</h2>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div class="flex flex-col items-center group">
+                            <div class="w-20 h-20 rounded-full border border-[#d4af37]/50 flex items-center justify-center mb-4 bg-[#021209] group-hover:bg-real-gold transition-colors duration-500 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                                <i class="fa-solid fa-scale-balanced text-3xl text-[#d4af37] group-hover:text-[#021209]"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-2">Công Chứng Nhà Nước</h4>
+                            <p class="text-xs text-gray-400 font-light uppercase tracking-wider">Luật pháp VN</p>
+                        </div>
+                        
+                        <div class="flex flex-col items-center group">
+                            <div class="w-20 h-20 rounded-full border border-[#d4af37]/50 flex items-center justify-center mb-4 bg-[#021209] group-hover:bg-real-gold transition-colors duration-500 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                                <i class="fa-solid fa-lock text-3xl text-[#d4af37] group-hover:text-[#021209]"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-2">Lưu Ký Độc Lập</h4>
+                            <p class="text-xs text-gray-400 font-light uppercase tracking-wider">Ngân hàng TMCP</p>
+                        </div>
+
+                        <div class="flex flex-col items-center group">
+                            <div class="w-20 h-20 rounded-full border border-[#d4af37]/50 flex items-center justify-center mb-4 bg-[#021209] group-hover:bg-real-gold transition-colors duration-500 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                                <i class="fa-solid fa-handshake-angle text-3xl text-[#d4af37] group-hover:text-[#021209]"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-2">Bảo Vệ Đa Chiều</h4>
+                            <p class="text-xs text-gray-400 font-light uppercase tracking-wider">Hợp đồng 3 bên</p>
+                        </div>
+
+                        <div class="flex flex-col items-center group">
+                            <div class="w-20 h-20 rounded-full border border-[#d4af37]/50 flex items-center justify-center mb-4 bg-[#021209] group-hover:bg-real-gold transition-colors duration-500 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                                <i class="fa-solid fa-file-invoice-dollar text-3xl text-[#d4af37] group-hover:text-[#021209]"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-2">Kiểm Toán Chuẩn</h4>
+                            <p class="text-xs text-gray-400 font-light uppercase tracking-wider">Báo cáo minh bạch</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Form -->
+            <section id="contact" class="py-24">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="border-real-gold bg-[#021209]/90 backdrop-blur-xl rounded-2xl p-8 md:p-14 shadow-[0_30px_60px_rgba(0,0,0,0.8)] relative overflow-hidden">
+                        
+                        <i class="fa-solid fa-certificate absolute -top-10 -right-10 text-9xl text-[#d4af37] opacity-[0.05]"></i>
+
+                        <div class="text-center mb-12 relative z-10">
+                            <h2 class="font-serif text-4xl font-bold text-real-gold mb-4 tracking-wide">Phiếu Yêu Cầu Định Danh</h2>
+                            <p class="text-gray-300 font-light text-lg">Mọi thông tin được mã hóa bảo mật. Chúng tôi chỉ tiếp nhận hồ sơ từ cá nhân/tổ chức đáp ứng quy mô vốn.</p>
+                        </div>
+
+                        <form class="space-y-8 relative z-10" onsubmit="event.preventDefault(); document.getElementById('success-msg').classList.remove('hidden'); this.style.display='none';">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <label class="block text-xs uppercase tracking-widest text-[#d4af37] mb-3 font-bold">Danh Tính / Tổ Chức *</label>
+                                    <input type="text" required class="w-full bg-transparent border-b-2 border-[#d4af37]/30 py-3 text-white focus:outline-none focus:border-[#d4af37] transition-colors placeholder-gray-700 text-lg font-light" placeholder="Nhập tên hợp pháp...">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase tracking-widest text-[#d4af37] mb-3 font-bold">Kênh Liên Hệ (Zalo/Telegram/SĐT) *</label>
+                                    <input type="text" required class="w-full bg-transparent border-b-2 border-[#d4af37]/30 py-3 text-white focus:outline-none focus:border-[#d4af37] transition-colors placeholder-gray-700 text-lg font-light" placeholder="+84...">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs uppercase tracking-widest text-[#d4af37] mb-3 font-bold">Vai Trò Đăng Ký</label>
+                                <select class="w-full bg-[#062615] border border-[#d4af37]/50 rounded py-4 px-4 text-white focus:outline-none focus:border-[#d4af37] cursor-pointer text-lg font-light">
+                                    <option value="client">Khách Hàng Thượng Lưu (Vốn > $1,000,000)</option>
+                                    <option value="broker">Đại Diện Sàn Giao Dịch (Broker Partner)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full bg-real-gold py-5 rounded font-bold text-xl uppercase tracking-widest mt-8 shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                                Gửi Yêu Cầu Cho Chuyên Gia
+                            </button>
+                        </form>
+
+                        <div id="success-msg" class="hidden mt-8 p-10 border border-[#d4af37] rounded-xl text-center bg-[#062615]/80">
+                            <i class="fa-solid fa-check-double text-5xl text-real-gold mb-6"></i>
+                            <h3 class="text-3xl font-serif text-white mb-3 tracking-wide">Hồ Sơ Đã Được Tiếp Nhận</h3>
+                            <p class="text-gray-300 font-light text-lg leading-relaxed">Bộ phận Private Client của TrustGuard sẽ thẩm định và liên hệ qua kênh bảo mật trong vòng 24 giờ tới.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-[#010804] py-16 border-t border-[#d4af37]/20 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <div class="flex items-center justify-center gap-4 mb-8">
+                    <i class="fa-solid fa-shield-cat text-4xl text-[#d4af37]"></i>
+                    <span class="font-serif text-3xl font-bold text-gray-500 uppercase tracking-widest">TrustGuard</span>
+                </div>
+                <p class="text-base text-gray-500 max-w-3xl mx-auto mb-10 font-light leading-relaxed">
+                    Hệ thống bảo lãnh tài chính độc lập. Chúng tôi không cung cấp dịch vụ giao dịch, không kêu gọi đầu tư, không cam kết lợi nhuận. Chức năng duy nhất là bảo vệ nguồn vốn gốc của khách hàng trước rủi ro vận hành và thanh khoản của các nền tảng trung gian.
+                </p>
+                <div class="text-xs text-gray-600 uppercase tracking-widest font-semibold">
+                    &copy; 2026 TrustGuard Guarantee Institution. Vietnam.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-[0_4px_30px_rgba(0,0,0,0.8)]', 'bg-[#021209]/95');
+                header.classList.remove('bg-[#021209]/80');
+            } else {
+                header.classList.remove('shadow-[0_4px_30px_rgba(0,0,0,0.8)]', 'bg-[#021209]/95');
+                header.classList.add('bg-[#021209]/80');
+            }
+        });
+
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Hiệu ứng rơi đồng xu vàng chân thực
+        const heroSection = document.getElementById('hero-section');
+        let lastCoinTime = 0;
+
+        heroSection.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            // Tần suất xuất hiện đồng xu
+            if (now - lastCoinTime < 50) return;
+            lastCoinTime = now;
+
+            if (Math.random() > 0.85) return;
+
+            const coin = document.createElement('div');
+            coin.className = 'gold-coin-particle';
+            
+            const rect = heroSection.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            coin.style.left = x + 'px';
+            coin.style.top = y + 'px';
+
+            // Quỹ đạo nổ và rơi
+            const dx = (Math.random() - 0.5) * 300 + 'px'; 
+            const dy = (Math.random() * 200) + 100 + 'px';  
+
+            coin.style.setProperty('--dx', dx);
+            coin.style.setProperty('--dy', dy);
+
+            heroSection.appendChild(coin);
+
+            setTimeout(() => {
+                if (heroSection.contains(coin)) {
+                    heroSection.removeChild(coin);
+                }
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
