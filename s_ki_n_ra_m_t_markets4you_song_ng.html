@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Kết Sự Kiện Markets4you | Markets4you Event Summary</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Cormorant Garamond cho phong cách sang trọng Á Đông, Be Vietnam Pro cho nội dung đọc -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Be Vietnam Pro"', 'sans-serif'],
+                    },
+                    colors: {
+                        luxury: {
+                            dark: '#0a0000',
+                            red: '#3a0000',
+                            gold: '#d4af37',
+                            goldlight: '#fbf5b7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styling & Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+        body {
+            background: #050000;
+            background: radial-gradient(circle at 50% 50%, #2a0000 0%, #050000 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Gradient Vàng Kim (Gold Gradient) */
+        .text-gold-gradient {
+            background: linear-gradient(to bottom right, #f9d976, #e7c059, #b48530, #f8d36b, #fff0a8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .bg-gold-gradient {
+            background: linear-gradient(to bottom right, #e7c059, #b48530, #f8d36b);
+        }
+
+        /* Glassmorphism Luxury Cards */
+        .card-luxury {
+            background: rgba(20, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(212, 175, 55, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-luxury:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.7);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15), inset 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Scroll Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-on-scroll { opacity: 0; }
+        .animate-on-scroll.is-visible {
+            animation: fadeInUp 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        /* Glowing Orbs in Background */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulse-glow 8s infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            0% { opacity: 0.2; transform: scale(1); }
+            100% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050000; }
+        ::-webkit-scrollbar-thumb { background: #b48530; border-radius: 10px; }
+        
+        /* Logo Image Box */
+        .logo-container {
+            background: rgba(255,255,255,0.9);
+            padding: 5px 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body class="font-sans relative">
+
+    <!-- Glowing Background Orbs -->
+    <div class="glow-orb bg-red-900 w-64 h-64 top-10 left-[-10%] md:left-10"></div>
+    <div class="glow-orb bg-yellow-700 w-80 h-80 bottom-20 right-[-10%] md:right-10" style="animation-delay: -4s;"></div>
+
+    <!-- Canvas for Blink Blink / Sparkle Effects -->
+    <canvas id="sparkleCanvas" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
+
+    <!-- Main Content wrapper (above canvas) -->
+    <div class="relative z-10">
+        
+        <!-- Navbar -->
+        <nav class="absolute top-0 w-full p-6 flex flex-col md:flex-row justify-center md:justify-between items-center animate-on-scroll is-visible gap-4">
+            <div class="logo-container">
+                <img src="https://storage.googleapis.com/aida-outputs/565d6447-0eab-4e3a-9657-fc7b39f37937.png" alt="Markets4you 19 Years Logo" class="h-10 md:h-12 object-contain">
+            </div>
+            <div class="text-center md:text-right">
+                <div class="text-sm text-gray-300 tracking-widest uppercase font-semibold">Việt Nam | 2026</div>
+                <div class="text-xs text-luxury-gold italic tracking-widest">Vietnam | 2026</div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-32 pb-10">
+            <div class="animate-on-scroll is-visible">
+                <p class="text-luxury-gold uppercase tracking-[0.2em] text-sm md:text-base font-semibold mb-1">
+                    Thành phố Hồ Chí Minh | 10 Tháng 06, 2026
+                </p>
+                <p class="text-gray-400 italic tracking-[0.1em] text-xs md:text-sm mb-6">
+                    Ho Chi Minh City | June 10, 2026
+                </p>
+                
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-4 uppercase tracking-wider leading-tight">
+                    <span class="block text-white text-2xl md:text-4xl mb-1">Sự kiện ra mắt</span>
+                    <span class="block text-gray-400 italic font-medium text-lg md:text-2xl mb-4 lowercase" style="font-variant: small-caps;">Launch Event</span>
+                    
+                    <span class="block text-white text-3xl md:text-5xl mb-1">Văn phòng đại diện</span>
+                    <span class="block text-gray-400 italic font-medium text-xl md:text-3xl mb-6 lowercase" style="font-variant: small-caps;">Representative Office</span>
+                    
+                    <span class="block text-gold-gradient drop-shadow-lg">Khởi Nguyên<br/>Thịnh Vượng</span>
+                    <span class="block text-luxury-goldlight italic font-medium text-2xl md:text-4xl mt-2">The Dawn of Prosperity</span>
+                </h1>
+                
+                <div class="h-px w-24 bg-gold-gradient mx-auto my-8 opacity-50"></div>
+                
+                <div class="max-w-3xl mx-auto mb-10">
+                    <p class="text-base md:text-lg text-gray-200 font-sans mb-3 font-light leading-relaxed">
+                        Đánh dấu cột mốc lịch sử của <strong class="text-luxury-gold">Markets4you</strong> tại Việt Nam. Một đêm hội tụ của tầng lớp tinh hoa, khẳng định cam kết phát triển bền vững cùng các đối tác chiến lược.
+                    </p>
+                    <p class="text-sm md:text-base text-gray-400 font-sans italic font-light leading-relaxed">
+                        Marking the historic milestone of <strong class="text-luxury-gold">Markets4you</strong> in Vietnam. A gathering of the elite, affirming our commitment to sustainable growth with strategic partners.
+                    </p>
+                </div>
+                
+                <a href="#highlights" class="inline-block px-8 py-4 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black transition-all duration-300 rounded-sm font-semibold tracking-widest uppercase text-sm mt-4">
+                    Khám phá Dấu Ấn <br> <span class="text-xs italic font-normal normal-case">Discover Highlights</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Highlights Section -->
+        <section id="highlights" class="py-20 px-6 max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif text-gold-gradient animate-on-scroll">Dấu Ấn Đỉnh Cao</h2>
+                <h3 class="text-2xl font-serif text-luxury-goldlight italic animate-on-scroll mt-2">Peak Highlights</h3>
+                
+                <p class="text-gray-300 mt-6 font-light animate-on-scroll delay-100">Những con số ấn tượng tại sự kiện khai mở kỷ nguyên mới</p>
+                <p class="text-gray-500 text-sm italic mt-1 animate-on-scroll delay-100">Impressive figures at the event opening a new era</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Highlight 1 -->
+                <div class="card-luxury p-8 rounded-lg text-center animate-on-scroll delay-100">
+                    <div class="text-4xl mb-4 text-luxury-gold">
+                        <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-white mb-1">19 Năm</h3>
+                    <h4 class="text-xl font-serif text-gray-400 italic mb-4">19 Years</h4>
+                    <p class="text-gray-300 text-sm mb-2">Di sản toàn cầu trao quyền cho mọi nhà giao dịch bước tới thành công.</p>
+                    <p class="text-gray-500 text-xs italic">Global legacy empowering traders to succeed.</p>
+                </div>
+                
+                <!-- Highlight 2 -->
+                <div class="card-luxury p-8 rounded-lg text-center animate-on-scroll delay-200 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-yellow-600/20 rounded-full blur-xl"></div>
+                    <div class="text-4xl mb-4 text-luxury-gold">
+                        <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-white mb-4">$5,000</h3>
+                    <p class="text-gray-300 text-sm mb-2">Quay số trúng thưởng và 100 phần quà giá trị dành tri ân khách mời.</p>
+                    <p class="text-gray-500 text-xs italic">Lucky draw and 100 valuable gifts to appreciate our guests.</p>
+                </div>
+
+                <!-- Highlight 3 -->
+                <div class="card-luxury p-8 rounded-lg text-center animate-on-scroll delay-300">
+                    <div class="text-4xl mb-4 text-luxury-gold">
+                        <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
+                    <h3 class="text-4xl font-serif font-bold text-white mb-4">100%</h3>
+                    <p class="text-gray-300 text-sm mb-2">Ưu đãi cộng thêm giá trị nạp tiền, sẵn sàng bứt phá mọi giới hạn.</p>
+                    <p class="text-gray-500 text-xs italic">Deposit bonus value, ready to break all limits.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partnership Ecosystem Section -->
+        <section class="py-20 px-6 max-w-6xl mx-auto relative">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-serif text-gold-gradient animate-on-scroll">Hệ Sinh Thái Đối Tác</h2>
+                <h3 class="text-2xl font-serif text-luxury-goldlight italic animate-on-scroll mt-2">Partnership Ecosystem</h3>
+                
+                <div class="mt-6 max-w-3xl mx-auto animate-on-scroll delay-100">
+                    <p class="text-gray-200 font-light leading-relaxed mb-2">
+                        Sự hợp tác đỉnh cao thể hiện sự đồng điệu giữa các thực thể tài chính, xã hội và công nghệ hàng đầu, cùng nhau kiến tạo nền móng vững chắc cho tương lai.
+                    </p>
+                    <p class="text-gray-400 text-sm font-light italic leading-relaxed">
+                        This ultimate collaboration represents an alignment between top financial, social, and technological entities, jointly building a solid foundation for the future.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                
+                <!-- Partner 1 -->
+                <div class="card-luxury p-6 md:p-8 rounded-xl flex flex-col items-start animate-on-scroll">
+                    <div class="w-12 h-12 rounded-full bg-luxury-dark border border-luxury-gold flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-serif text-luxury-goldlight mb-3">Markets4you</h3>
+                    <p class="text-gray-200 text-sm font-light leading-relaxed mb-2">Nhà môi giới toàn cầu với di sản <strong class="text-white">19 năm</strong> hình thành và phát triển, chuyên cung cấp giải pháp, nền tảng và trao quyền tối đa cho các nhà giao dịch.</p>
+                    <p class="text-gray-500 text-xs italic font-light leading-relaxed">Global broker with a 19-year legacy, providing solutions, platforms, and ultimate empowerment for traders.</p>
+                </div>
+
+                <!-- Partner 2 -->
+                <div class="card-luxury p-6 md:p-8 rounded-xl flex flex-col items-start animate-on-scroll delay-100">
+                    <div class="w-12 h-12 rounded-full bg-luxury-dark border border-luxury-gold flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-serif text-luxury-goldlight mb-3">CLB 3W (Win-Win-Win)</h3>
+                    <p class="text-gray-200 text-sm font-light leading-relaxed mb-2">Đơn vị tư vấn, thực thi chiến lược xuất sắc và là cơ quan cấp chứng nhận đối tác ủy quyền uy tín hàng đầu trong mạng lưới hệ sinh thái.</p>
+                    <p class="text-gray-500 text-xs italic font-light leading-relaxed">Excellent strategic execution and consulting unit, the leading authorized partner certification body in the ecosystem network.</p>
+                </div>
+
+                <!-- Partner 3 -->
+                <div class="card-luxury p-6 md:p-8 rounded-xl flex flex-col items-start animate-on-scroll delay-200">
+                    <div class="w-12 h-12 rounded-full bg-luxury-dark border border-luxury-gold flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-serif text-luxury-goldlight mb-1">Ngân Hàng Bảo Quốc Vạn Thông</h3>
+                    <h4 class="text-sm font-serif text-gray-400 italic mb-3">Bao Quoc Van Thong Bank</h4>
+                    <p class="text-gray-200 text-sm font-light leading-relaxed mb-2">Đối tác ngân hàng mang đẳng cấp hoàng gia, đóng vai trò cốt lõi trong việc cung cấp hạ tầng tài chính an toàn và bảo mật tuyệt đối.</p>
+                    <p class="text-gray-500 text-xs italic font-light leading-relaxed">Royal-class banking partner, playing a core role in providing safe and absolutely secure financial infrastructure.</p>
+                </div>
+
+                <!-- Partner 4 -->
+                <div class="card-luxury p-6 md:p-8 rounded-xl flex flex-col items-start animate-on-scroll delay-300">
+                    <div class="w-12 h-12 rounded-full bg-luxury-dark border border-luxury-gold flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-serif text-luxury-goldlight mb-3">Saigon Group</h3>
+                    <p class="text-gray-200 text-sm font-light leading-relaxed mb-2">Đối tác tư vấn doanh nghiệp toàn diện và vạch định chiến lược kỹ thuật công nghệ sâu rộng cho những bước tiến lớn.</p>
+                    <p class="text-gray-500 text-xs italic font-light leading-relaxed">Comprehensive corporate consulting partner and deep technical technology strategist for major steps forward.</p>
+                </div>
+
+                <!-- Partner 5 (Span full width on md) -->
+                <div class="card-luxury p-6 md:p-8 rounded-xl flex flex-col md:flex-row items-start md:items-center md:col-span-2 animate-on-scroll delay-400">
+                    <div class="w-12 h-12 flex-shrink-0 rounded-full bg-luxury-dark border border-luxury-gold flex items-center justify-center mb-5 md:mb-0 md:mr-6">
+                        <svg class="w-6 h-6 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-serif text-luxury-goldlight mb-1">Hội Hỗ trợ PTKT Miền Núi Việt Nam</h3>
+                        <h4 class="text-sm font-serif text-gray-400 italic mb-2">Vietnam Mountainous Economic Development Support Association</h4>
+                        <p class="text-gray-200 text-sm font-light leading-relaxed mb-1">Bảo trợ và tạo điều kiện thúc đẩy phát triển kinh tế, mang đến những hoạt động tiếp cận cộng đồng mang tính nhân văn sâu sắc tại các vùng núi khó khăn.</p>
+                        <p class="text-gray-500 text-xs italic font-light leading-relaxed">Sponsoring and facilitating economic development, bringing deeply humane community outreach activities to difficult mountainous areas.</p>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-12 text-center animate-on-scroll">
+                <p class="text-sm text-gray-400 mb-1">
+                    Cùng sự đồng hành trân quý của các tổ chức: <span class="text-gray-300 font-medium">SV TEK, GROUP IB, Encor Ventures, FXArmy, Any Shape, TCI Horizon.</span>
+                </p>
+                <p class="text-xs text-gray-500 italic">
+                    With the precious companionship of organizations: SV TEK, GROUP IB, Encor Ventures, FXArmy, Any Shape, TCI Horizon.
+                </p>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="py-20 px-6 max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-serif text-gold-gradient animate-on-scroll">Khoảnh Khắc Đáng Nhớ</h2>
+                <h3 class="text-2xl font-serif text-luxury-goldlight italic animate-on-scroll mt-2">Memorable Moments</h3>
+                <div class="h-px w-16 bg-luxury-gold mx-auto mt-6"></div>
+            </div>
+
+            <!-- CSS Grid for Images with elegant hover effects -->
+            <!-- Cập nhật: Tối ưu grid để hiển thị cân đối hơn trên mobile và tablet -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <!-- Hình 1 (Hall) span 2 columns trên sm, span 3 trên lg -->
+                <!-- Cập nhật: Điều chỉnh aspect ratio và colspan cho hình ảnh lớn đầu tiên -->
+                <div class="rounded-xl overflow-hidden card-luxury group animate-on-scroll delay-100 sm:col-span-2 lg:col-span-3 aspect-video lg:aspect-[21/9]">
+                    <img src="https://storage.googleapis.com/aida-outputs/0a9bb8bd-2ba3-4a11-a885-f3775b48eef9.jpeg" alt="Event Hall Setup" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                </div>
+                
+                <!-- Các hình ảnh còn lại sử dụng chung aspect ratio 4/3 để đồng bộ -->
+                <!-- Hình 2 -->
+                <div class="rounded-xl overflow-hidden card-luxury aspect-[4/3] group animate-on-scroll delay-100">
+                    <img src="https://storage.googleapis.com/aida-outputs/0ab3a6b8-c304-44e2-bd0f-244e43e2e04e.jpeg" alt="Group Photo" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                
+                <!-- Hình 3 -->
+                <div class="rounded-xl overflow-hidden card-luxury aspect-[4/3] group animate-on-scroll delay-200">
+                    <img src="https://storage.googleapis.com/aida-outputs/9c1de23f-e555-4654-be8e-f1df49ffbc63.jpeg" alt="Certificates Group 1" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                
+                <!-- Hình 4 -->
+                <div class="rounded-xl overflow-hidden card-luxury aspect-[4/3] group animate-on-scroll delay-300">
+                    <img src="https://storage.googleapis.com/aida-outputs/d1607590-78a7-47b6-9bbd-c6a6f112e8fb.jpeg" alt="Certificates Group 2" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                
+                <!-- Hình 5 -->
+                <div class="rounded-xl overflow-hidden card-luxury aspect-[4/3] group animate-on-scroll delay-100">
+                    <img src="https://storage.googleapis.com/aida-outputs/2816922b-2a62-42da-aa93-2780e035ecad.jpeg" alt="Lucky Draw" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                
+                <!-- Hình 6 -->
+                <div class="rounded-xl overflow-hidden card-luxury aspect-[4/3] group animate-on-scroll delay-200">
+                    <img src="https://storage.googleapis.com/aida-outputs/45f8e5c1-3dcd-4d89-9aeb-32c0282b992f.jpeg" alt="Giving Flowers" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+                
+                <!-- Hình 7 -->
+                <div class="rounded-xl overflow-hidden card-luxury aspect-[4/3] group animate-on-scroll delay-300">
+                    <img src="https://storage.googleapis.com/aida-outputs/09939eec-4af2-4a0b-93ff-dcf7ccbfba82.jpeg" alt="Giving Gifts" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+            </div>
+            
+            <p class="text-center text-xs text-gray-500 mt-8 animate-on-scroll">
+                [Hình ảnh trích xuất từ sự kiện thực tế]<br>
+                <span class="italic text-[10px] text-gray-600">[Images extracted from the actual event]</span>
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-luxury-gold/20 mt-10 py-12 px-6 text-center">
+            <div class="font-serif text-3xl tracking-widest text-gold-gradient font-bold mb-4">MARKETS4YOU</div>
+            <p class="text-gray-300 text-sm font-medium uppercase tracking-wider mb-1">Trao Quyền Giao Dịch - Kiến Tạo Tương Lai</p>
+            <p class="text-gray-500 text-xs italic tracking-widest mb-6">Empowering Trading - Shaping the Future</p>
+            
+            <p class="text-gray-500 text-xs mt-6">&copy; 2026 Sự kiện ra mắt văn phòng đại diện tại Việt Nam.</p>
+            <p class="text-gray-600 text-[10px] italic mt-1">&copy; 2026 Launch event of the representative office in Vietnam.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript for Animations & Sparkle Canvas -->
+    <script>
+        // 1. Intersection Observer for Scroll Animations
+        document.addEventListener("DOMContentLoaded", function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // 2. Sparkle "Blink Blink" Particle Canvas
+        const canvas = document.getElementById('sparkleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                // Kích thước hạt lấp lánh (nhỏ để tạo sự sang trọng)
+                this.size = Math.random() * 1.5 + 0.5;
+                // Tốc độ bay chậm trôi nổi
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * -0.5 - 0.1; // Bay nhẹ lên trên
+                this.opacity = Math.random();
+                // Tốc độ chớp nháy (blink)
+                this.fadeSpeed = Math.random() * 0.015 + 0.005;
+                this.fadingOut = Math.random() > 0.5;
+                // 80% hạt màu vàng, 20% hạt màu trắng nhạt
+                this.isGold = Math.random() > 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Hiệu ứng chớp tắt blink blink
+                if (this.fadingOut) {
+                    this.opacity -= this.fadeSpeed;
+                    if (this.opacity <= 0.05) this.fadingOut = false;
+                } else {
+                    this.opacity += this.fadeSpeed;
+                    if (this.opacity >= 0.8) this.fadingOut = true;
+                }
+
+                // Vòng lặp vị trí hạt
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                
+                if (this.isGold) {
+                    ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+                    ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
+                } else {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+                }
+                
+                ctx.shadowBlur = 8;
+                ctx.fill();
+            }
+        }
+
+        // Khởi tạo hệ thống hạt
+        function initParticles() {
+            particles = [];
+            // Điều chỉnh số lượng hạt tùy theo kích thước màn hình
+            const numParticles = window.innerWidth < 768 ? 60 : 150;
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
